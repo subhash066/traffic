@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class CameraManager : MonoBehaviour
     }
 
     public CameraShot[] cameras;
+    public string nextSceneName = "accident";
 
     private int currentIndex = 0;
     private float timer = 0f;
@@ -66,7 +68,10 @@ public class CameraManager : MonoBehaviour
         currentIndex++;
 
         if (currentIndex >= cameras.Length)
-            currentIndex = 0;
+        {
+            SceneManager.LoadScene(nextSceneName);
+            return;
+        }
 
         if (cameras[currentIndex].cam != null)
         {
