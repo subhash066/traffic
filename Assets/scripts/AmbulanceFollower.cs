@@ -10,10 +10,6 @@ public class AmbulanceFollower : MonoBehaviour
     public Vector3 rotationOffset = Vector3.zero;
     public float waitTimeAtVictim = 3f;
     
-    [Header("Audio Settings")]
-    public AudioClip sirenSound;
-    private AudioSource audioSource;
-
     private bool reachedTarget = false;
     private bool returningHome = false;
     private Vector3 startPosition;
@@ -25,16 +21,6 @@ public class AmbulanceFollower : MonoBehaviour
     {
         startPosition = transform.position;
         startRotation = transform.rotation;
-
-        // Setup the siren
-        if (sirenSound != null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-            audioSource.clip = sirenSound;
-            audioSource.loop = true;
-            audioSource.spatialBlend = 1f; // 3D sound
-            audioSource.Play();
-        }
     }
 
     public void SetTarget(Transform newTarget)
@@ -57,7 +43,6 @@ public class AmbulanceFollower : MonoBehaviour
             MoveTowards(startPosition);
             if (Vector3.Distance(transform.position, startPosition) < 0.5f)
             {
-                if (audioSource != null) audioSource.Stop();
                 Destroy(gameObject, 1f); 
                 returningHome = false; 
             }
@@ -66,18 +51,10 @@ public class AmbulanceFollower : MonoBehaviour
 
         if (reachedTarget)
         {
-            // Stop siren when arrived at victim
-            if (audioSource != null && audioSource.isPlaying)
-            {
-                audioSource.Stop();
-            }
-
             waitTimer += Time.deltaTime;
             if (waitTimer >= waitTimeAtVictim)
             {
                 returningHome = true;
-                // Optionally restart siren when returning? 
-                // if (audioSource != null) audioSource.Play();
             }
             return;
         }
